@@ -11,9 +11,8 @@ public class PlayerItem : MonoBehaviour
     public void Set(Photon.Realtime.Player player)
     {
         playerName.text = player.NickName;
-        if (PhotonNetwork.IsMasterClient)
-        {
-            playerName.text += " (Master)";
-        }
+
+        if (player == PhotonNetwork.MasterClient)
+            playerName.text = player.NickName + " (Master)";
     }
 }

@@ -6,7 +6,7 @@ using DG.Tweening;
 using UnityEngine.UI;
 using TMPro;
 
-public class Player : MonoBehaviour
+public class CardPlayer : MonoBehaviour
 {
     public Transform atkPosRef;
     public Card choosenCard;

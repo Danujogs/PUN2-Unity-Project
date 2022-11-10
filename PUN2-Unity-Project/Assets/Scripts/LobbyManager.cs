@@ -4,12 +4,15 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
+using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
 
     [SerializeField] TMP_InputField newRoomInputField;
     [SerializeField] TMP_Text feedbackText;
+    [SerializeField] Button startGameButton;
+
     [SerializeField] GameObject roomPanel;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] GameObject roomListObject;
@@ -47,6 +50,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(newRoomInputField.text, roomOptions);
     }
 
+    public void ClickStartGane(string levelName)
+    {
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.LoadLevel(levelName);
+    }
+
     public void JoinRoom(string roomName)
     {
         PhotonNetwork.JoinRoom(roomName);
@@ -66,6 +75,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         roomPanel.SetActive(true);
         // update player list
         UpdatePlayerList();
+
+        // atur start game button
+        SetStartGameButton();
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
@@ -78,12 +90,48 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         // update player list
         UpdatePlayerList();
-        // TERAKHIR VIDRECORD 27 (42:42)!!
+
+    }
+
+    public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
+    {
+        // atur start game button
+        SetStartGameButton();
+    }
+
+    private void SetStartGameButton()
+    {
+        // tampilkan button hanya untuk room master
+        startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+
+        // bisa diklik hanya jika player sudah >= 2
+        startGameButton.interactable = PhotonNetwork.CurrentRoom.PlayerCount >= 2;
     }
 
     private void UpdatePlayerList()
     {
-        // PhotonNetwork.PlayerList
+        // destroy dulu semua player yang sudah ada
+        foreach (var item in playerItemList)
+        {
+            Destroy(item.gameObject);
+        }
+
+        playerItemList.Clear();
+
+        // bikin ulang player list
+        // foreach (Photon.Realtime.Player player in PhotonNetwork.PlayerList)
+        foreach (var (id, player) in PhotonNetwork.CurrentRoom.Players)
+        {
+            PlayerItem newPlayerItem = Instantiate(playerItemPrefab, playerListObject.transform);
+            newPlayerItem.Set(player);
+            playerItemList.Add(newPlayerItem);
+
+            if (player == PhotonNetwork.LocalPlayer)
+                newPlayerItem.transform.SetAsFirstSibling();
+        }
+        // start game hanya bisa dijalankan ketika jumlah player sudah melebihi 2
+        SetStartGameButton();
+
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)

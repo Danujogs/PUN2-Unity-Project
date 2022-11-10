@@ -21,6 +21,7 @@ public class ConnectManager : MonoBehaviourPunCallbacks
         {
             // simpan username
             PhotonNetwork.NickName = usernameInput.text;
+            PhotonNetwork.AutomaticallySyncScene = true;
 
             // connect ke server
             PhotonNetwork.ConnectUsingSettings();

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
-public class GameManager : MonoBehaviour
+
+public class CardGameManager : MonoBehaviour
 {
-    public Player P1;
-    public Player P2;
+    public GameObject netPlayerPrefab;
+    public CardPlayer P1;
+    public CardPlayer P2;
 
     public GameState State = GameState.ChooseAttack;
     public GameObject gameOverPanel;
@@ -16,8 +19,8 @@ public class GameManager : MonoBehaviour
     public AudioClip startClip;
     public AudioClip deathClip;
 
-    private Player damagedPlayer;
-    private Player winner;
+    private CardPlayer damagedPlayer;
+    private CardPlayer winner;
     public enum GameState
     {
         ChooseAttack, //memilih attack
@@ -31,6 +34,7 @@ public class GameManager : MonoBehaviour
     {
         audioSource.PlayOneShot(startClip);
         gameOverPanel.SetActive(false);
+        PhotonNetwork.Instantiate(netPlayerPrefab.name, Vector3.zero, Quaternion.identity);
     }
 
     private void Update()
@@ -123,7 +127,7 @@ public class GameManager : MonoBehaviour
         P2.Reset();
     }
 
-    private Player GetDamagedPlayer()
+    private CardPlayer GetDamagedPlayer()
     {
         Attack? PlayerAtk1 = P1.AttackValue;
         Attack? PlayerAtk2 = P2.AttackValue;
@@ -156,7 +160,7 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    private Player GetWinner()
+    private CardPlayer GetWinner()
     {
         if (P1.Health == 0)
         {
