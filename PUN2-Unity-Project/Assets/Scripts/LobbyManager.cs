@@ -13,13 +13,17 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject roomPanel;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] GameObject roomListObject;
+    [SerializeField] GameObject playerListObject;
     [SerializeField] RoomItem roomItemPrefab;
+    [SerializeField] PlayerItem playerItemPrefab;
 
     List<RoomItem> roomItemList = new List<RoomItem>();
+    List<PlayerItem> playerItemList = new List<PlayerItem>();
 
     private void Start()
     {
         PhotonNetwork.JoinLobby();
+        roomPanel.SetActive(false);
     }
 
     public void ClickCreateRoom()
@@ -30,8 +34,16 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             feedbackText.text = "Room name min 3 characters";
             return;
         }
+
+        if (newRoomInputField.text.Length >= 16)
+        {
+            // Debug.Log("Room name max 16 characters!");
+            feedbackText.text = "Room name max 16 characters";
+            return;
+        }
+
         RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 2;
+        roomOptions.MaxPlayers = 5;
         PhotonNetwork.CreateRoom(newRoomInputField.text, roomOptions);
     }
 
@@ -52,6 +64,32 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         feedbackText.text = "Joined room: " + PhotonNetwork.CurrentRoom.Name;
         roomNameText.text = PhotonNetwork.CurrentRoom.Name;
         roomPanel.SetActive(true);
+        // update player list
+        UpdatePlayerList();
+    }
+
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        // update player list
+        UpdatePlayerList();
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        // update player list
+        UpdatePlayerList();
+        // TERAKHIR VIDRECORD 27 (42:42)!!
+    }
+
+    private void UpdatePlayerList()
+    {
+        // PhotonNetwork.PlayerList
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        Debug.Log(returnCode + "," + message);
+        feedbackText.text = returnCode.ToString() + "," + message;
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
