@@ -12,6 +12,8 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
     public GameObject netPlayerPrefab;
     public CardPlayer P1;
     public CardPlayer P2;
+    public float restoreValue = 5;
+    public float damageValue = 10;
 
     public GameState State, NextState = GameState.NetPlayersInitialization;
     public GameObject gameOverPanel;
@@ -23,8 +25,10 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
 
     private CardPlayer damagedPlayer;
     private CardPlayer winner;
+    public bool Online = true;
 
-    public List<int> syncReadyPlayers = new List<int>();
+    // public List<int> syncReadyPlayers = new List<int>();
+    HashSet<int> syncReadyPlayers = new HashSet<int>();
     public enum GameState
     {
         SyncState,
@@ -40,8 +44,18 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
     {
         audioSource.PlayOneShot(startClip);
         gameOverPanel.SetActive(false);
-        PhotonNetwork.Instantiate(netPlayerPrefab.name, Vector3.zero, Quaternion.identity);
-        StartCoroutine(PingCoroutine());
+        if (Online)
+        {
+            PhotonNetwork.Instantiate(netPlayerPrefab.name, Vector3.zero, Quaternion.identity);
+            StartCoroutine(PingCoroutine());
+            State = GameState.NetPlayersInitialization;
+            NextState = GameState.NetPlayersInitialization;
+        }
+
+        else
+        {
+            State = GameState.ChooseAttack;
+        }
     }
 
     private void Update()
@@ -111,13 +125,13 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
                     //kalkulasi health
                     if (damagedPlayer == P1)
                     {
-                        P1.ChangeHealth(-25);
-                        P2.ChangeHealth(10);
+                        P1.ChangeHealth(-damageValue);
+                        P2.ChangeHealth(restoreValue);
                     }
                     else
                     {
-                        P1.ChangeHealth(10);
-                        P2.ChangeHealth(-25);
+                        P1.ChangeHealth(restoreValue);
+                        P2.ChangeHealth(-damageValue);
                     }
 
                     var winner = GetWinner();
@@ -134,7 +148,8 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
                     {
                         audioSource.PlayOneShot(deathClip);
                         gameOverPanel.SetActive(true);
-                        winnerText.text = winner == P1 ? "Player 1 Wins!" : "Player 2 Wins!";
+                        winnerText.text = winner == P1 ?
+                        $"{P1.NickName.text} Wins!" : $"{P2.NickName.text} Wins!";
                         ResetPlayers();
                         ChangeState(GameState.GameOver);
                     }
@@ -163,8 +178,16 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
+    private const byte playerChangeState = 1;
+
     private void ChangeState(GameState nextState)
     {
+        if (Online == false)
+        {
+            State = nextState;
+            return;
+        }
+
         if (this.NextState == nextState)
             return;
 
@@ -172,19 +195,26 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
         var actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
         var raiseEventOptions = new RaiseEventOptions();
         raiseEventOptions.Receivers = ReceiverGroup.All;
-        PhotonNetwork.RaiseEvent(1, actorNum, raiseEventOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent(playerChangeState, actorNum, raiseEventOptions, SendOptions.SendReliable);
+
         this.State = GameState.SyncState;
         this.NextState = nextState;
     }
 
     public void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == 1)
+        switch (photonEvent.Code)
         {
-            var actorNum = (int)photonEvent.CustomData;
+            case playerChangeState:
+                var actorNum = (int)photonEvent.CustomData;
 
-            if (syncReadyPlayers.Contains(actorNum) == false)
+                // if (syncReadyPlayers.Contains(actorNum) == false)
+
                 syncReadyPlayers.Add(actorNum);
+
+                break;
+            default:
+                break;
         }
     }
 

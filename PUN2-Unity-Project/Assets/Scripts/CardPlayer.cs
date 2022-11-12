@@ -10,6 +10,8 @@ public class CardPlayer : MonoBehaviour
 {
     public Transform atkPosRef;
     public Card choosenCard;
+    [SerializeField] private TMP_Text nameText;
+
     public HealthBar healthBar;
     public TMP_Text healthText;
     public float Health;
@@ -18,6 +20,8 @@ public class CardPlayer : MonoBehaviour
     public AudioClip damageClip;
     public AudioClip drawClip;
     private Tweener animationTweener;
+
+    public TMP_Text NickName { get => nameText; }
     private void Start()
     {
         Health = MaxHealth;

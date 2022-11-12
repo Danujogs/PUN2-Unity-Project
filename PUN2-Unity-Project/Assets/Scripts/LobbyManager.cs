@@ -21,6 +21,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     List<RoomItem> roomItemList = new List<RoomItem>();
     List<PlayerItem> playerItemList = new List<PlayerItem>();
+    Dictionary<string, RoomInfo> roomInfoCache = new Dictionary<string, RoomInfo>();
 
     private void Start()
     {
@@ -51,8 +52,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void ClickStartGane(string levelName)
     {
+
         if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.LoadLevel(levelName);
+        }
     }
 
     public void JoinRoom(string roomName)
@@ -130,7 +135,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
         // start game hanya bisa dijalankan ketika jumlah player sudah melebihi 2
         SetStartGameButton();
-
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -141,6 +145,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        foreach (var roomInfo in roomList)
+        {
+            roomInfoCache[roomInfo.Name] = roomInfo;
+        }
+
         foreach (var item in this.roomItemList)
         {
             Destroy(item.gameObject);
@@ -148,11 +157,30 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         this.roomItemList.Clear();
 
-        foreach (var RoomInfo in roomList)
+        var roomInfoList = new List<RoomInfo>(roomInfoCache.Count);
+
+        //  sort yang open dibuat pertama
+        foreach (var roomInfo in roomInfoCache.Values)
         {
-            var newRoomItem = Instantiate(roomItemPrefab, roomListObject.transform);
-            newRoomItem.Set(this, RoomInfo.Name);
-            roomItemList.Add(newRoomItem);
+            if (roomInfo.IsOpen)
+                roomInfoList.Add(roomInfo);
+        }
+
+        // kemudian yang close
+        foreach (var roomInfo in roomInfoCache.Values)
+        {
+            if (roomInfo.IsOpen == false)
+                roomInfoList.Add(roomInfo);
+        }
+
+        foreach (var roomInfo in roomInfoList)
+        {
+            if (roomInfo.MaxPlayers == 0)
+                continue;
+
+            RoomItem newRoomItem = Instantiate(roomItemPrefab, roomListObject.transform);
+            newRoomItem.Set(this, roomInfo);
+            this.roomItemList.Add(newRoomItem);
         }
     }
 }

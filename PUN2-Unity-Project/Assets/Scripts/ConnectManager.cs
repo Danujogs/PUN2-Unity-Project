@@ -35,6 +35,14 @@ public class ConnectManager : MonoBehaviourPunCallbacks
         feedbackText.text = "Connected to Master";
         Debug.Log("Connected to master");
         SceneManager.LoadScene("Lobby");
+        StartCoroutine(LoadLevelAfterConnectedAndReady());
+    }
 
+    IEnumerator LoadLevelAfterConnectedAndReady()
+    {
+        while (PhotonNetwork.IsConnectedAndReady == false)
+        {
+            yield return null;
+        }
     }
 }

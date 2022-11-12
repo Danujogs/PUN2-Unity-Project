@@ -7,16 +7,18 @@ using UnityEngine.UI;
 public class CardNetPlayer : MonoBehaviourPun
 {
     public static List<CardNetPlayer> NetPlayers = new List<CardNetPlayer>(2);
-    private CardPlayer cardPlayer;
     private Card[] cards;
     public void Set(CardPlayer player)
     {
-        cardPlayer = player;
+        player.NickName.text = photonView.Owner.NickName;
         cards = player.GetComponentsInChildren<Card>();
         foreach (var card in cards)
         {
             var button = card.GetComponent<Button>();
             button.onClick.AddListener(() => RemoteClickButton(card.AttackValue));
+
+            if (photonView.IsMine == false)
+                button.interactable = false;
         }
     }
 
