@@ -12,7 +12,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] TMP_InputField newRoomInputField;
     [SerializeField] TMP_Text feedbackText;
     [SerializeField] Button startGameButton;
-
     [SerializeField] GameObject roomPanel;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] GameObject roomListObject;

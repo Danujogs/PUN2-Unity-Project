@@ -4,25 +4,31 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-
-public class CardGameManager : MonoBehaviour
+public class CardGameManager : MonoBehaviour, IOnEventCallback
 {
     public GameObject netPlayerPrefab;
     public CardPlayer P1;
     public CardPlayer P2;
 
-    public GameState State = GameState.ChooseAttack;
+    public GameState State, NextState = GameState.NetPlayersInitialization;
     public GameObject gameOverPanel;
     public TMP_Text winnerText;
+    public TMP_Text pingText;
     public AudioSource audioSource;
     public AudioClip startClip;
     public AudioClip deathClip;
 
     private CardPlayer damagedPlayer;
     private CardPlayer winner;
+
+    public List<int> syncReadyPlayers = new List<int>();
     public enum GameState
     {
+        SyncState,
+        NetPlayersInitialization,
         ChooseAttack, //memilih attack
         Attacks, //antar player attack
         Damages, //damage yang diberikan
@@ -35,12 +41,39 @@ public class CardGameManager : MonoBehaviour
         audioSource.PlayOneShot(startClip);
         gameOverPanel.SetActive(false);
         PhotonNetwork.Instantiate(netPlayerPrefab.name, Vector3.zero, Quaternion.identity);
+        StartCoroutine(PingCoroutine());
     }
 
     private void Update()
     {
         switch (State)
         {
+            case GameState.SyncState:
+                if (syncReadyPlayers.Count == 2)
+                {
+                    syncReadyPlayers.Clear();
+                    State = NextState;
+                }
+                break;
+
+            case GameState.NetPlayersInitialization:
+                if (CardNetPlayer.NetPlayers.Count == 2)
+                {
+                    foreach (var netPlayer in CardNetPlayer.NetPlayers)
+                    {
+                        if (netPlayer.photonView.IsMine)
+                        {
+                            netPlayer.Set(P1);
+                        }
+                        else
+                        {
+                            netPlayer.Set(P2);
+                        }
+                    }
+                    ChangeState(GameState.ChooseAttack);
+                }
+                break;
+
             case GameState.ChooseAttack:
                 if (P1.AttackValue != null && P2.AttackValue != null)
                 {
@@ -48,7 +81,7 @@ public class CardGameManager : MonoBehaviour
                     P2.AnimateAttack();
                     P1.isClickable(false);
                     P2.isClickable(false);
-                    State = GameState.Attacks;
+                    ChangeState(GameState.Attacks);
                 }
                 break;
 
@@ -60,13 +93,13 @@ public class CardGameManager : MonoBehaviour
                     if (damagedPlayer != null)
                     {
                         damagedPlayer.AnimateDamage();
-                        State = GameState.Damages;
+                        ChangeState(GameState.Damages);
                     }
                     else
                     {
                         P1.AnimateDraw();
                         P2.AnimateDraw();
-                        State = GameState.Draw;
+                        ChangeState(GameState.Draw);
                     }
                 }
                 break;
@@ -94,7 +127,7 @@ public class CardGameManager : MonoBehaviour
                         ResetPlayers();
                         P1.isClickable(true);
                         P2.isClickable(true);
-                        State = GameState.ChooseAttack;
+                        ChangeState(GameState.ChooseAttack);
 
                     }
                     else
@@ -103,7 +136,7 @@ public class CardGameManager : MonoBehaviour
                         gameOverPanel.SetActive(true);
                         winnerText.text = winner == P1 ? "Player 1 Wins!" : "Player 2 Wins!";
                         ResetPlayers();
-                        State = GameState.GameOver;
+                        ChangeState(GameState.GameOver);
                     }
                 }
                 break;
@@ -114,9 +147,54 @@ public class CardGameManager : MonoBehaviour
                     ResetPlayers();
                     P1.isClickable(true);
                     P2.isClickable(true);
-                    State = GameState.ChooseAttack;
+                    ChangeState(GameState.ChooseAttack);
                 }
                 break;
+        }
+    }
+
+    private void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
+    private void ChangeState(GameState nextState)
+    {
+        if (this.NextState == nextState)
+            return;
+
+        // kirim message kalo ready
+        var actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
+        var raiseEventOptions = new RaiseEventOptions();
+        raiseEventOptions.Receivers = ReceiverGroup.All;
+        PhotonNetwork.RaiseEvent(1, actorNum, raiseEventOptions, SendOptions.SendReliable);
+        this.State = GameState.SyncState;
+        this.NextState = nextState;
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == 1)
+        {
+            var actorNum = (int)photonEvent.CustomData;
+
+            if (syncReadyPlayers.Contains(actorNum) == false)
+                syncReadyPlayers.Add(actorNum);
+        }
+    }
+
+    IEnumerator PingCoroutine()
+    {
+        var wait = new WaitForSeconds(1f);
+        while (true)
+        {
+            pingText.text = "Ping: " + PhotonNetwork.GetPing() + " ms";
+            yield return wait;
         }
     }
 
