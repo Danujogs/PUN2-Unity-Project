@@ -19,9 +19,9 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
     public GameObject gameOverPanel;
     public TMP_Text winnerText;
     public TMP_Text pingText;
-    public AudioSource audioSource;
-    public AudioClip startClip;
-    public AudioClip deathClip;
+    public AudioSource startClip;
+
+    public AudioSource deathClip;
 
     private CardPlayer damagedPlayer;
     private CardPlayer winner;
@@ -42,7 +42,7 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
 
     private void Start()
     {
-        audioSource.PlayOneShot(startClip);
+        startClip.PlayOneShot(startClip.clip);
         gameOverPanel.SetActive(false);
         if (Online)
         {
@@ -146,7 +146,7 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
                     }
                     else
                     {
-                        audioSource.PlayOneShot(deathClip);
+                        deathClip.PlayOneShot(deathClip.clip);
                         gameOverPanel.SetActive(true);
                         winnerText.text = winner == P1 ?
                         $"{P1.NickName.text} Wins!" : $"{P2.NickName.text} Wins!";

@@ -175,7 +175,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         foreach (var roomInfo in roomInfoList)
         {
-            if (roomInfo.MaxPlayers == 0)
+            if (roomInfo.IsVisible == false || roomInfo.MaxPlayers == 0)
                 continue;
 
             RoomItem newRoomItem = Instantiate(roomItemPrefab, roomListObject.transform);

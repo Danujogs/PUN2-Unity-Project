@@ -16,9 +16,8 @@ public class CardPlayer : MonoBehaviour
     public TMP_Text healthText;
     public float Health;
     public float MaxHealth;
-    public AudioSource audioSource;
-    public AudioClip damageClip;
-    public AudioClip drawClip;
+    public AudioSource damageClip;
+    public AudioSource drawClip;
     private Tweener animationTweener;
 
     public TMP_Text NickName { get => nameText; }
@@ -73,7 +72,7 @@ public class CardPlayer : MonoBehaviour
 
     public void AnimateDamage()
     {
-        audioSource.PlayOneShot(damageClip);
+        damageClip.PlayOneShot(damageClip.clip);
         var Image = choosenCard.GetComponent<Image>();
         animationTweener = Image
             .DOColor(new Color(255, 0, 0), 0.1f)
@@ -83,7 +82,7 @@ public class CardPlayer : MonoBehaviour
 
     public void AnimateDraw()
     {
-        audioSource.PlayOneShot(drawClip);
+        drawClip.PlayOneShot(drawClip.clip);
         animationTweener = choosenCard.transform
         .DOMove(choosenCard.OriginalPositon, 0.5f)
         .SetEase(Ease.InOutBack)
