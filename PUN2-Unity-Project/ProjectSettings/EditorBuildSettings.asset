@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/GameplayCard.unity
     guid: 63ea6a93e7ebd454ea865fac55976a6c
   - enabled: 1
+    path: Assets/Scenes/GameplayCardBot.unity
+    guid: 2136ad2276f774745ad81272950e3e08
+  - enabled: 1
     path: Assets/Scenes/Lobby.unity
     guid: f97d674dfe5578d47a53b0291b9389ff
   m_configObjects: {}
