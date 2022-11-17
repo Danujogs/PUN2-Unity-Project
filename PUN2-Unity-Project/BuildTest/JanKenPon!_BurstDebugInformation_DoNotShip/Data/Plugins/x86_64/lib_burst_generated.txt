@@ -149,6 +149,7 @@ Library: lib_burst_generated
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Telemetry.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.VisualScripting.State.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Core.dll
+--root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Authentication.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\PhotonUnityNetworking.Demos.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.Internal.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Burst.dll
@@ -162,6 +163,7 @@ Library: lib_burst_generated
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\PhotonUnityNetworking.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\PhotonUnityNetworking.Utilities.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Analytics.dll
+--root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.RemoteConfig.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.2D.SpriteShape.Runtime.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Scheduler.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Registration.dll
@@ -176,6 +178,7 @@ Library: lib_burst_generated
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Assembly-CSharp-firstpass.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.InternalAPIEngineBridge.001.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Configuration.dll
+--root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.RemoteConfig.Editor.Core.dll
 --assembly-folder=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\
 --pdb-search-paths=Temp/ManagedSymbols/
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
@@ -332,6 +335,7 @@ Library: lib_burst_generated
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Telemetry.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.VisualScripting.State.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Core.dll
+--root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Authentication.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\PhotonUnityNetworking.Demos.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.Internal.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Burst.dll
@@ -345,6 +349,7 @@ Library: lib_burst_generated
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\PhotonUnityNetworking.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\PhotonUnityNetworking.Utilities.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Analytics.dll
+--root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.RemoteConfig.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.2D.SpriteShape.Runtime.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Scheduler.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Registration.dll
@@ -359,6 +364,7 @@ Library: lib_burst_generated
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Assembly-CSharp-firstpass.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.InternalAPIEngineBridge.001.dll
 --root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.Services.Core.Configuration.dll
+--root-assembly=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\Unity.RemoteConfig.Editor.Core.dll
 --assembly-folder=D:\Github Repo\PUN2-Unity-Project\PUN2-Unity-Project\Temp\StagingArea\Data\Managed\
 --pdb-search-paths=Temp/ManagedSymbols/
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
